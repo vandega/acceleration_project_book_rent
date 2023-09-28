@@ -30,6 +30,20 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+MY_APPS = [
+    'member',
+    'giveaway'
+]
+
+THIRD_PARTY_APP = [
+    # for swagger
+    'drf_yasg',
+
+    # added by me
+    'rest_framework',
+    'rest_framework.authtoken',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,16 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # for swagger
-    'drf_yasg',
-
-    # added by me
-    'rest_framework',
-    'rest_framework.authtoken',
-    'member',
-    'giveaway'
-]
+] + MY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

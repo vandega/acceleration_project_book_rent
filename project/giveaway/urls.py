@@ -22,5 +22,8 @@ urlpatterns = [
     path('genre/edit/<int:pk>/', views.GenreEditAPIView.as_view(), name='genre_edit'),
 
     # condition view endpoints
+    path('condition/list/', views.ConditionCreateAPIView.as_view(), name='condition_list'),
+    path('condition/admintools/<int:pk>/', views.ConditionDetailsAPIView.as_view(), name='condition_control_for_admin_DELETE'),
+
 ]
 

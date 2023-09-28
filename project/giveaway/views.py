@@ -11,7 +11,7 @@ from .models import Book, Author, Genre, Condition
 
 # todo: test when i create book
 
-
+# TODO: add book filter
 # Book views
 class BookListAPIView(APIView):
     permission_classes = [AllowAny]
@@ -41,6 +41,12 @@ class BookDeleteAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
+        book = get_object_or_404(Book,  pk=pk)
+        serializer = GenreSerializer(book)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
         book = get_object_or_404(Book, pk=pk)
 
         book.delete()
@@ -95,6 +101,12 @@ class AuthorDeleteAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
+        author = get_object_or_404(Author,  pk=pk)
+        serializer = GenreSerializer(author)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
         author = Author.objects.filter(pk=pk)
 
         author.delete()
@@ -110,7 +122,7 @@ class AuthorEditAPIView(APIView):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, pk):
+    def patch(self, request, pk):
         author = get_object_or_404(Author, id=pk)
 
         serializer = AuthorSerializer(author, data=request.data, partial=True)
@@ -150,6 +162,12 @@ class GenreDeleteAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
+        genre = get_object_or_404(Genre,  pk=pk)
+        serializer = GenreSerializer(genre)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
         genre = get_object_or_404(Genre, pk=pk)
 
         genre.delete()
@@ -178,15 +196,56 @@ class GenreEditAPIView(APIView):
 
 
 # Condition Views -------------------------
-class ConditionCreateAPIView(APIView):  # TODO: need to finish
+class ConditionCreateAPIView(APIView):  # list and edit
     permission_classes = [IsAuthenticated]
 
-    def patch(self, request):
-        return Response(data={'under production'}, status=status.HTTP_204_NO_CONTENT)
+    def get(self, request, pk=0):
+        if not pk:
+            condition = Condition.objects.all()
+
+            if condition:
+                serializer = ConditionSerializer(condition, many=True)
+                return Response(data=serializer.data, status=status.HTTP_200_OK )
+
+        condition = get_object_or_404(Condition, pk=pk)
+
+        serializer = ConditionSerializer(condition)
+        return Response(data=serializer, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = ConditionSerializer(data=request.data)
+
+        if serializer.data:
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-class ConditionEditAPIViews(APIView):  # TODO: need to finish
-    permission_classes = [IsAuthenticated]  # TODO: in the end it must be replaced with IsAdminUser
+class ConditionDetailsAPIView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, pk):
+
+        condition = get_object_or_404(Condition, pk=pk)
+
+        serializer = ConditionSerializer(condition)
+        return Response(data=serializer, status=status.HTTP_200_OK)
 
     def patch(self, request, pk):
-        return Response(data={'under production'}, status=status.HTTP_204_NO_CONTENT)
+
+        condition = get_object_or_404(Condition, pk=pk)
+        serializer = GenreSerializer(condition, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_201_CREATED)
+
+
+    def delete(self, request, pk):
+        condition = get_object_or_404(Genre, pk=pk)
+
+        condition.delete()
+        return Response(data={'deleted'}, status=status.HTTP_204_NO_CONTENT)
+
+
+
