@@ -5,13 +5,13 @@ from .models import Book, Genre, Condition, Author
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = ['genre']
+        fields = ['id', 'genre']
 
 
 class ConditionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Condition
-        fields = ['condition']
+        fields = ['id', 'condition']
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -23,5 +23,5 @@ class AuthorSerializer(serializers.ModelSerializer):
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['title', 'description', 'pages', 'author', 'genre', 'condition', 'image']
+        fields = ['id', 'title', 'description', 'pages', 'author', 'genre', 'condition', 'image']
 
